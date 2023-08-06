@@ -4,8 +4,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // ** Axios Imports
 import axios from "axios";
 import { users } from "../../../../users";
-const baseUrl='http://localhost:5000';
+const baseUrl=import.meta.env.VITE_REACT_APP_BASE_URL;
 export const getAllData = createAsyncThunk("appUsers/getAllData", async () => {
+ //console.log(baseUrl);
   const response = await axios.get(`${baseUrl}/users`);
   //console.log(response.data);
   return response.data;

@@ -27,6 +27,7 @@ const DefaultRoute = "/home"
 
 const Home = lazy(() => import("../../views/Home"))
 const UserList = lazy(() => import("../../views/apps/user/list"))
+const ServiceList=lazy(()=>import("../../views/apps/Service/list"))
 const SecondPage = lazy(() => import("../../views/SecondPage"))
 const Login = lazy(() => import("../../views/Login"))
 const Register = lazy(() => import("../../views/Register"))
@@ -60,6 +61,10 @@ const Routes = [
   {
     element: <UserList />,
     path: "/user"
+  },
+  {
+    element: <ServiceList />,
+    path: "//services"
   },
   {
     path: "/register",
