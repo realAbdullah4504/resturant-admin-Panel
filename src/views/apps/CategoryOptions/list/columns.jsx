@@ -23,68 +23,48 @@ const renderClient = (row) => {
 
 export const columns = [
   {
-    name: "Title",
+    name: "Name",
     sortable: true,
-    minWidth: "150px",
+    minWidth: "350px",
     sortField: "name",
-    selector: (row) => row.title,
+    selector: (row) => row.value,
     cell: (row) => {
       // console.log(row);
       return (
-        <span className="text-capitalize">{row.title}</span>
+        <div className="d-flex align-items-center">
+          {/* {renderClient(row)} */}
+          <div className="d-flex  flex-column">
+            <div className="user_name text-truncate text-body ">
+              <span className="fw-bolder ">{row.value}</span>
+            </div>
+            {/* <small className='text-truncate text-muted mb-0'>{row.category.value}</small> */}
+          </div>
+        </div>
       );
     },
   },
   {
-    name: "Category",
+    name: "Label",
     sortable: true,
-    minWidth: "172px",
-    height: "200px",
-    sortField: "category",
-    selector: (row) => row.categoryId.value,
-    cell: (row) => (
-      <span className="text-capitalize">{row.categoryId.value}</span>
-    ),
+    minWidth: "350px",
+    sortField: "label",
+    selector: (row) => row.label,
+    cell: (row) => {
+      // console.log(row);
+      return (
+        <div className="d-flex align-items-center">
+          {/* {renderClient(row)} */}
+          <div className="d-flex  flex-column">
+            <div className="user_name text-truncate text-body ">
+              <span className="fw-bolder ">{row.label}</span>
+            </div>
+            {/* <small className='text-truncate text-muted mb-0'>{row.category.value}</small> */}
+          </div>
+        </div>
+      );
+    },
   },
-  {
-    name: "Description",
-    sortable: true,
-    minWidth: "250px",
-    height: "200px",
-    sortField: "description",
-    selector: (row) => row.description,
-    cell: (row) => (
-      <span className="text-capitalize">{`${row.description.slice(
-        0,
-        45
-      )}...`}</span>
-    ),
-  },
-  {
-    name: "Price",
-    sortable: true,
-    minWidth: "172px",
-    sortField: "price",
-    selector: (row) => row.price,
-    cell: (row) => <span className="text-capitalize">{row.price}</span>,
-  },
-  {
-    name: "size",
-    sortable: true,
-    minWidth: "172px",
-    sortField: "price",
-    selector: (row) => row.size,
-    cell: (row) => <span className="text-capitalize">{row.size}</span>,
-  },
-  {
-    name: "type",
-    sortable: true,
-    minWidth: "172px",
-    sortField: "price",
-    selector: (row) => row.type,
-    cell: (row) => <span className="text-capitalize">{row.type}</span>,
-  },
-
+  
   // {
   //   name: 'Actions',
   //   minWidth: '100px',

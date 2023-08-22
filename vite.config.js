@@ -15,7 +15,7 @@ export default () => {
       port: 3000,
       proxy: 'https://pixinvent.com/',
       cors: {
-        origin: ['https://pixinvent.com/', 'http://localhost:3000'],
+        origin: ['https://pixinvent.com/', 'http://localhost:4000'],
         methods: ['GET', 'PATCH', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
       }

@@ -15,7 +15,7 @@ export const getAllData = createAsyncThunk("appUsers/getAllData", async () => {
 export const appUsersSlice = createSlice({
   name: "appUsers",
   initialState: {
-    users: [],
+    users: []
   },
 
   reducers: {

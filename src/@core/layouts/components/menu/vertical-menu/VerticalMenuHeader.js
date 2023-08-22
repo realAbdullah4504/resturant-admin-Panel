@@ -60,10 +60,11 @@ const VerticalMenuHeader = (props) => {
             to={user ? getHomeRouteForLoggedInUser(user.role) : "/"}
             className="navbar-brand"
           >
-            <span className="brand-logo">
-              <img src={themeConfig.app.appLogoImage} alt="logo" />
-            </span>
-            <h2 className="brand-text mb-0">{themeConfig.app.appName}</h2>
+            {/* <span  className="brand-logo"> */}
+              <img src={themeConfig.app.appLogoImage} height="42" width='220'  alt="logo" />
+            {/* </span> */}
+
+            {/* <h2 className="brand-text mb-0">{themeConfig.app.appName}</h2> */}
           </NavLink>
         </li>
         <li className="nav-item nav-toggle">

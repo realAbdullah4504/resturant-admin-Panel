@@ -16,7 +16,7 @@ import { columns } from "./columns"
 // // ** Store & Actions
 // import { getAllData, getData } from '../store'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUsers, getAllData } from '../store'
+import { getUsers } from '../store'
 
 // // ** Third Party Components
 // import Select from 'react-select'

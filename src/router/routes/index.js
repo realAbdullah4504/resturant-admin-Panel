@@ -27,44 +27,45 @@ const DefaultRoute = "/home"
 
 const Home = lazy(() => import("../../views/Home"))
 const UserList = lazy(() => import("../../views/apps/user/list"))
-const ServiceList=lazy(()=>import("../../views/apps/Service/list"))
+const ServiceList = lazy(() => import("../../views/apps/Service/list"))
 const SecondPage = lazy(() => import("../../views/SecondPage"))
 const Login = lazy(() => import("../../views/Login"))
 const Register = lazy(() => import("../../views/Register"))
 const ForgotPassword = lazy(() => import("../../views/ForgotPassword"))
 const Error = lazy(() => import("../../views/Error"))
+const CategoryOptionsList = lazy(() => import("../../views/apps/CategoryOptions/list"))
 
 // ** Merge Routes
 const Routes = [
-  {
-    path: "/",
-    index: true,
-    element: <Navigate replace to={DefaultRoute} />
-  },
-  {
-    path: "/home",
-    element: <Home />
-  },
+  // {
+  //   path: "/",
+  //   index: true,
+  //   element: <Navigate replace to={DefaultRoute} />
+  // },
+  // {
+  //   path: "/home",
+  //   element: <Home />
+  // },
 
-  {
-    path: "/second-page",
-    element: <SecondPage />
-  },
+  // {
+  //   path: "/second-page",
+  //   element: <SecondPage />
+  // },
 
+  // {
+  //   path: "/login",
+  //   element: <Login />,
+  //   meta: {
+  //     layout: "blank"
+  //   }
+  // },
   {
-    path: "/login",
-    element: <Login />,
-    meta: {
-      layout: "blank"
-    }
-  },
-  {
-    element: <UserList />,
-    path: "/user"
+    element: <CategoryOptionsList />,
+    path: "/options"
   },
   {
     element: <ServiceList />,
-    path: "//services"
+    path: "/services"
   },
   {
     path: "/register",

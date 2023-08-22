@@ -17,10 +17,11 @@ import Table from './Table'
 // console.log('hi')
 // }, [])
 
-const ServiceList = () => {
+const CategoryOptionsList = () => {
   return (
     <div className="app-user-list">
       <Table />
+      {/* <h1>categories page</h1> */}
     </div>
     //       <Row>
     //         <Col lg='3' sm='6'>
@@ -59,4 +60,4 @@ const ServiceList = () => {
   )
 }
 
-export default ServiceList
+export default CategoryOptionsList;
