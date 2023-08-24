@@ -17,8 +17,7 @@ const ModalForm = ({
   formSetting,
   selectOptions = [],
   mainType = "",
-  preview="",
-  
+  preview = "",
 }) => {
   // const [formModal, setFormModal] = useState(false);
   // const form = formSetting.reduce((types, name) => {
@@ -43,33 +42,36 @@ const ModalForm = ({
         {formSetting?.map((form) => {
           //  console.log(form?.options)
           return (
-          <div key={form?.id} className="mb-2">
-            {form?.mainType === mainType &&
-              (form?.type !== "Select" ? (
-                <InputBasic
-                  changeHandler={changeHandler}
-                  id={form?.id}
-                  value={value[form?.name]}
-                  name={form?.name}
-                  label={form?.label}
-                  type={form?.type}
-                  placeholder={form?.placeHolder}
-                  preview={preview}
-                  errorMessage={errorMessage[form?.id]}
-                />
-              ) : (
-                <SelectBasic
-                  selectedOptions={selectOptions}
-                  changeHandler={changeHandler}
-                  value={value[form?.name]}
-                  name={form?.name}
-                  label={form?.label}
-                  placeholder={form?.placeHolder}
-                  errorMessage={errorMessage[form?.id]}
-                />
-              ))}
-          </div>
-        )})}
+            <div key={form?.id} className="mb-2">
+              {form?.mainType === mainType &&
+                (form?.type !== "Select" ? (
+                  <InputBasic
+                    changeHandler={changeHandler}
+                    id={form?.id}
+                    value={value[form?.name]}
+                    name={form?.name}
+                    label={form?.label}
+                    type={form?.type}
+                    placeholder={form?.placeHolder}
+                    preview={preview}
+                    errorMessage={errorMessage[form?.name]}
+                  />
+                ) : (
+                  <SelectBasic
+                    selectedOptions={
+                      form?.options ? form?.options : selectOptions
+                    }
+                    changeHandler={changeHandler}
+                    value={value[form?.name]}
+                    name={form?.name}
+                    label={form?.label}
+                    placeholder={form?.placeHolder}
+                    errorMessage={errorMessage[form?.name]}
+                  />
+                ))}
+            </div>
+          );
+        })}
       </ModalBody>
     </div>
   );

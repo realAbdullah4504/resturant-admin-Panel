@@ -11,6 +11,7 @@ const url = import.meta.env.VITE_REACT_APP_BASE_URL;
 // import DataTable from "react-data-table-component"
 import { columns } from "./columns";
 //import { users } from '../../../../users'
+import CommonModal from "../../../../components/CommonModal";
 
 // // ** Invoice List Sidebar
 
@@ -38,7 +39,11 @@ import { Row, Col, Input, Card, Button } from "reactstrap";
 // ** Styles
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
-import { filteration, handleToast } from "../../../../utils/helpers";
+import {
+  filteration,
+  handleToast,
+  validation,
+} from "../../../../utils/helpers";
 
 // ** Table Header
 const CustomHeader = ({
@@ -108,11 +113,15 @@ const ServiceList = () => {
   const [refresh, setRefresh] = useState(false);
   const [file, setFile] = useState({});
 
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState("");
+
   const [formModal, setFormModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [preview, setPreview] = useState("");
   const [category, setCategory] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState([]);
 
   const clickHandlerCancel = () => {
     setFormModal(!formModal);
@@ -126,52 +135,62 @@ const ServiceList = () => {
 
   const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
+  const handleChange = (name, value, type) => {
+    // console.log("name", name, "value", value);
     const filteredData = {
       ...category,
       [name]: value,
     };
+    setErrorMessage({ ...errorMessage, [name]: "" });
     setCategory(filteredData);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
     // console.log("edit", edit);
-    setIsLoading(true);
 
-    try {
-      let data = {};
-      if (edit === false) {
-        const data = await axios.post(`${baseUrl}/category`, category);
-        // console.log(data.data.filename);
-      } else {
-        const response = await axios.patch(
-          `${baseUrl}/category/${category._id}`,
-          category
-        );
-        setEdit(false);
+    const { isValid, error } = validation(category, FormDataSetting?.form);
+    // console.log(error);
+    setErrorMessage(error);
+
+    if (isValid) {
+      setIsLoading(true);
+      try {
+        let data = {};
+        if (edit === false) {
+          const data = await axios.post(`${baseUrl}/category`, category);
+          // console.log(data.data.filename);
+        } else {
+          const response = await axios.patch(
+            `${baseUrl}/category/${category._id}`,
+            category
+          );
+          setEdit(false);
+        }
+
+        setRefresh(!refresh);
+        clickHandlerCancel();
+        handleToast("success", "Successfully Submitted");
+        setIsLoading(false);
+        // console.log("data", data);
+      } catch (error) {
+        // console.log("error", error);
+        handleToast("error", "Error While Submitting");
+        setIsLoading(false);
       }
-
-      setRefresh(!refresh);
-      clickHandlerCancel();
-      handleToast("success", "Successfully Submitted");
-      setIsLoading(false);
-      // console.log("data", data);
-    } catch (error) {
-      // console.log("error", error);
-      handleToast("error", "Error While Submitting");
-      setIsLoading(false);
     }
   };
   const handleDelete = async (id) => {
+    setIsLoading(true);
     try {
       const deleteData = await axios.delete(`${baseUrl}/category/${id}`);
-      setRefresh(false);
+      setRefresh(!refresh);
+      setDeleteModal(!deleteModal);
       handleToast("success", "Successfully Deleted");
+      setIsLoading(false);
       // console.log("delete", deleteData);
     } catch (error) {
       handleToast("error", "Error While Deleting");
+      setIsLoading(false);
       console.log("error", error);
     }
   };
@@ -185,7 +204,7 @@ const ServiceList = () => {
   const dataToRender = () => {
     // console.log(store)
     if (categoryOptions.length > 0) {
-      return filteration(categoryOptions, searchTerm);;
+      return filteration(categoryOptions, searchTerm);
     } else if (categoryOptions.length === 0) {
       return [];
     }
@@ -198,27 +217,33 @@ const ServiceList = () => {
       cell: (row) => {
         return (
           <div className="d-flex align-items-center permissions-actions">
-            <Button
-              size="sm"
-              color="primary"
-              className="btn btn-icon me-1"
+            <div
+              className="button-container"
               onClick={() => {
                 clickHandlerCancel();
                 setCategory(row);
-                // console.log(row)
+                // console.log(row);
                 setEdit(true);
               }}
             >
-              <Edit className="font-medium-2" />
-            </Button>
-            <Button
-              size="sm"
-              color="danger"
-              className="btn btn-icon"
-              onClick={() => handleDelete(row._id)}
+              <Edit
+                style={{ stroke: "#7367f0", cursor: "pointer" }}
+                className="font-medium-2"
+              />
+            </div>
+            <div
+              className="button-container"
+              onClick={() => {
+                setDeleteModal(!deleteModal);
+                //handleDelete(row._id)
+                setDeleteId(row._id);
+              }}
             >
-              <Trash className="font-medium-2" />
-            </Button>
+              <Trash
+                style={{ stroke: "red", cursor: "pointer" }}
+                className="font-medium-2"
+              />
+            </div>
           </div>
         );
       },
@@ -232,22 +257,39 @@ const ServiceList = () => {
     <Fragment>
       <Card className="overflow-hidden">
         <ModalMain
-          changeHandler={handleChange}
-          mainType="options"
-          //  errorMessage={errorMessage}
-          //  blurHandler={blurHandler}
           heading="Category"
-          value={category}
-          formSetting={FormDataSetting?.form}
           isLoading={isLoading}
           clickHandlerSubmit={handleSubmit}
           clickHandlerCancel={clickHandlerCancel}
           formModal={formModal}
           edit={edit}
-          selectOptions={categoryOptions}
-          // buttonDisabled={!validation(state, errorMessage, FormData.form)}
-          // buttonDisabled={false}
+          Component={
+            <CommonModal
+              mainType="options"
+              changeHandler={handleChange}
+              errorMessage={errorMessage}
+              value={category}
+              formSetting={FormDataSetting?.form}
+            />
+          }
         />
+        <ModalMain
+          formModal={deleteModal}
+          msg="Are you Sure Want to Delete"
+          clickHandlerCancel={() => {
+            setDeleteModal(!deleteModal);
+          }}
+          clickHandlerSubmit={() => handleDelete(deleteId)}
+          isLoading={isLoading}
+          buttonColour="danger"
+          buttonText="Delete"
+          Component={
+            <p className="ms-2" style={{ color: "red" }}>
+              Are You Sure Want To Delete
+            </p>
+          }
+        />
+
         {/* <h1>table</h1> */}
         <div className="react-dataTable">
           <DataTable

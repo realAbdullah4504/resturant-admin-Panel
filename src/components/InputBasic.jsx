@@ -21,22 +21,39 @@ const InputBasic = ({
       <Label className="form-label" for={id}>
         {label}
       </Label>
-      <div className={type === "file" ? "d-flex flex-row" : ""}>
-        <div>
-          <Input
-            className={className}
-            type={type}
-            name={name}
-            id={id}
-            disabled={disabled}
-            value={type !== "file" ? value : undefined}
-            onChange={changeHandler}
-            // onBlur={blurHandler}
-            required={required}
-            placeholder={placeholder}
-            // invalid={errorMessage ? true : false}
-          />
-        </div>
+      <div>
+        {type !== "file" ? (
+          <div>
+            <Input
+              className={className}
+              type={type}
+              name={name}
+              id={id}
+              disabled={disabled}
+              value={value}
+              onChange={(e) => changeHandler(name, e.target.value, type)}
+              // onBlur={blurHandler}
+              required={required}
+              placeholder={placeholder}
+              // invalid={errorMessage ? true : false}
+            />
+          </div>
+        ) : (
+          <div>
+            <Input
+              className={className}
+              type={type}
+              name={name}
+              id={id}
+              disabled={disabled}
+              onChange={(e) => changeHandler(name, e.target.files[0], type)}
+              // onBlur={blurHandler}
+              required={required}
+              placeholder={placeholder}
+              // invalid={errorMessage ? true : false}
+            />
+          </div>
+        )}
 
         {type === "file" && preview && (
           <div className="ms-2">

@@ -8,6 +8,7 @@ import ModalMain from "../../../../components/ModalMain";
 import { FormDataSetting } from "../../../../formSettings";
 import { Modal, ModalHeader } from "reactstrap";
 const url = import.meta.env.VITE_REACT_APP_BASE_URL;
+import CommonModal from "../../../../components/CommonModal";
 // import DataTable from "react-data-table-component"
 // import { columns } from "./columns"
 //import { users } from '../../../../users'
@@ -50,10 +51,12 @@ const initialState = {
   title: "",
   description: "",
   price: "",
+  type: "",
   size: "",
   image: "",
   status: "",
 };
+
 // ** Table Header
 const CustomHeader = ({
   setDetail,
@@ -61,6 +64,9 @@ const CustomHeader = ({
   clickHandlerCancel,
   searchTerm,
   handleFilter,
+  setFile,
+  setPreview,
+  setErrorMessage,
 }) => {
   return (
     <div className="invoice-list-table-header w-100 me-1 ms-50 mt-2 mb-75">
@@ -88,8 +94,13 @@ const CustomHeader = ({
               color="primary"
               onClick={() => {
                 clickHandlerCancel();
+
                 setEdit(false);
                 setDetail(initialState);
+
+                setPreview("");
+                setFile({});
+                setErrorMessage({});
               }}
             >
               Add New Menu
@@ -103,7 +114,7 @@ const CustomHeader = ({
 
 const ServiceList = () => {
   const dispatch = useDispatch();
-  const store = useSelector((state) => state.deals);
+  const deals = useSelector((state) => state.deals.deals);
   const categoryOptions = useSelector(
     (state) => state.categories.categoryOptions
   );
@@ -121,11 +132,12 @@ const ServiceList = () => {
   const [file, setFile] = useState({});
 
   const [formModal, setFormModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [open, setOpen] = useState(false);
   const [preview, setPreview] = useState("");
-  const [upload, setUpload] = useState();
   const [errorMessage, setErrorMessage] = useState([]);
 
   const clickHandlerCancel = () => {
@@ -146,28 +158,22 @@ const ServiceList = () => {
 
   const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
-  const handleChange = (e) => {
-    const type = e?.target?.type || "";
-    const name = type === "" ? "categoryId" : e?.target?.name;
-    const value = type === "" ? e : e?.target?.value;
-
+  const handleChange = (name, value, type) => {
+    //  console.log('name',name,'value',value);
     if (type !== "file") {
       const filteredData = {
         ...detail,
         [name]: value,
       };
+      setErrorMessage({ ...errorMessage, [name]: "" });
       setDetail(filteredData);
     } else {
-      setFile(e.target.files[0]);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        // console.log(reader.result);
-        setUpload(reader.result);
-      };
-      reader.readAsDataURL(e.target.files[0]);
+      setErrorMessage({ ...errorMessage, [name]: "" });
+      setFile(value);
+      setPreview(URL.createObjectURL(value));
     }
 
-    // console.log("detail", detail, "file", file);
+    //  console.log("detail", detail, "file", file);
   };
 
   const handleSubmit = async (e) => {
@@ -190,16 +196,21 @@ const ServiceList = () => {
     // console.log("detal", detail);
 
     for (const key in detail) {
-      if (key !== "categoryId") {
+      if (key !== "categoryId" && key !== "size" && key !== "type") {
         formData.append(key, detail[key]);
+      } else if (key !== "categoryId") {
+        formData.append(key, JSON.stringify(detail[key]));
+        // }
       }
-      // }
     }
     // console.log(formData);
-
+    const image = edit === true ? preview : file.name || "";
     // console.log(file);
-    const {isValid,error}=validation(detail, FormDataSetting?.form);
-    console.log(error)
+    const { isValid, error } = validation(
+      { ...detail, image },
+      FormDataSetting?.form
+    );
+    // console.log(error);
     setErrorMessage(error);
 
     if (isValid) {
@@ -238,13 +249,17 @@ const ServiceList = () => {
     }
   };
   const handleDelete = async (id) => {
+    setIsLoading(true);
     try {
       const deleteData = await axios.delete(`${baseUrl}/deals/${id}`);
-      setRefresh(false);
+      setRefresh(!refresh);
+      setDeleteModal(!deleteModal);
       handleToast("success", "Successfully Deleted");
+      setIsLoading(false);
       // console.log("delete", deleteData);
     } catch (error) {
       handleToast("success", "Error While Deleting");
+      setIsLoading(false);
       // console.log("error", error);
     }
   };
@@ -269,22 +284,23 @@ const ServiceList = () => {
   };
 
   const dataToRender = () => {
-    if (store.deals.length > 0) {
+    if (deals.length > 0) {
       if (searchTerm.trim() === "") {
-        return store.deals;
+        return deals;
       } else {
-        return filteration(store.deals, searchTerm);
+        return filteration(deals, searchTerm);
       }
-    } else if (store.deals.length === 0) {
+    } else if (deals.length === 0) {
       return [];
     }
+    console.log(deals);
   };
 
   const updatedColumns = [
     ...columns,
 
     {
-      name: "Attachment",
+      name: "Image",
       sortable: true,
       minWidth: "200px",
       sortField: "preview",
@@ -301,7 +317,7 @@ const ServiceList = () => {
             }}
             color="primary"
           >
-            Show Attachment
+            Click to see Image
           </h6>
         </div>
       ),
@@ -311,33 +327,43 @@ const ServiceList = () => {
       cell: (row) => {
         return (
           <div className="d-flex align-items-center permissions-actions">
-            <Button
-              size="sm"
-              color="primary"
-              className="btn btn-icon me-1"
+            <div
+              className="button-container"
               onClick={() => {
                 clickHandlerCancel();
                 setDetail(row);
                 // console.log(row);
                 setEdit(true);
+                setErrorMessage({});
+                setPreview(`${url}/deals/${row.image}`);
               }}
             >
-              <Edit className="font-medium-2" />
-            </Button>
-            <Button
-              size="sm"
-              color="danger"
-              className="btn btn-icon"
-              onClick={() => handleDelete(row._id)}
+              <Edit
+                style={{ stroke: "#7367f0", cursor: "pointer" }}
+                className="font-medium-2"
+              />
+            </div>
+            <div
+              className="button-container"
+              onClick={() => {
+                setDeleteModal(!deleteModal);
+                //handleDelete(row._id)
+                setDeleteId(row._id);
+              }}
             >
-              <Trash className="font-medium-2" />
-            </Button>
+              <Trash
+                style={{ stroke: "red", cursor: "pointer" }}
+                className="font-medium-2"
+              />
+            </div>
+            {/* </Button> */}
           </div>
         );
       },
     },
   ];
   //  console.log(FormData);
+
   return (
     //  <h1>hi iam service</h1>
 
@@ -345,22 +371,46 @@ const ServiceList = () => {
       <Card className="overflow-hidden">
         {/* {inputOpen && */}
         <ModalMain
-          changeHandler={handleChange}
-          mainType="deals"
-          errorMessage={errorMessage}
           // blurHandler={blurHandler}
           heading="Menu"
-          value={detail}
-          formSetting={FormDataSetting?.form}
           isLoading={isLoading}
           clickHandlerSubmit={handleSubmit}
           clickHandlerCancel={clickHandlerCancel}
           formModal={formModal}
-          edit={edit}
-          selectOptions={options}
-          preview={upload}
+          buttonText={edit ? "Update" : "Submit"}
+          buttonColour="primary"
+          Component={
+            <CommonModal
+              changeHandler={handleChange}
+              errorMessage={errorMessage}
+              // blurHandler={blurHandler}
+              value={detail}
+              formSetting={FormDataSetting?.form}
+              selectOptions={options}
+              mainType="deals"
+              // preview={edit ? `${url}/deals/${preview}` : preview}
+              preview={preview}
+            />
+          }
           // buttonDisabled={!validation(detail, FormDataSetting?.form)}
           // buttonDisabled={false}
+        />
+
+        <ModalMain
+          formModal={deleteModal}
+          // heading="Delete"
+          isLoading={isLoading}
+          clickHandlerCancel={() => {
+            setDeleteModal(!deleteModal);
+          }}
+          clickHandlerSubmit={() => handleDelete(deleteId)}
+          buttonColour="danger"
+          buttonText="Delete"
+          Component={
+            <p className="ms-2 " style={{ color: "red" }}>
+              Are You Sure Want To Delete
+            </p>
+          }
         />
 
         <Modal
@@ -384,7 +434,7 @@ const ServiceList = () => {
           <DataTable
             noHeader
             subHeader
-            sortServer
+            // sortServer
             pagination
             responsive
             columns={updatedColumns}
@@ -395,9 +445,13 @@ const ServiceList = () => {
                 setDetail={setDetail}
                 setEdit={setEdit}
                 clickHandlerCancel={clickHandlerCancel}
-                store={store}
+                deals={deals}
                 searchTerm={searchTerm}
                 handleFilter={handleFilter}
+                setFile={setFile}
+                file={file}
+                setErrorMessage={setErrorMessage}
+                setPreview={setPreview}
               />
             }
           />

@@ -1,39 +1,29 @@
-import { Button, Modal, ModalHeader, Form, FormGroup } from "reactstrap"
-import ModalFooterBasic from "./ModalFooterBasic"
-import CommonModal from './CommonModal'
-
+import { Button, Modal, ModalHeader, Form, FormGroup } from "reactstrap";
+import ModalFooterBasic from "./ModalFooterBasic";
+// import CommonModal from './CommonModal'
 
 const ModalMain = ({
-    changeHandler,
-    errorMessage,
-    blurHandler,
-    value,
-    formSetting,
-    isLoading,
-    clickHandlerSubmit,
-    clickHandlerCancel,
-    formModal,
-    buttonDisabled=false,
-    edit,
-    selectOptions=[],
-    mainType='',
-    heading='modal',
-    preview='',
+  isLoading,
+  clickHandlerSubmit,
+  clickHandlerCancel,
+  formModal,
+  buttonDisabled = false,
+  buttonText = "Submit",
+  heading ='',
+  Component,
+  buttonColour = "primary",
 }) => {
+  return (
+    <div className="demo-inline-spacing">
+      {/* <Toaster position="top-right" /> */}
 
-    return (
-        <div className="demo-inline-spacing">
-            {/* <Toaster position="top-right" /> */}
-
-            <Modal
-                isOpen={formModal}
-                toggle={clickHandlerCancel}
-                className="modal-dialog-centered"
-            >
-                <ModalHeader toggle={clickHandlerCancel}>
-                    {heading}
-                </ModalHeader>
-                <CommonModal
+      <Modal
+        isOpen={formModal}
+        toggle={clickHandlerCancel}
+        className="modal-dialog-centered"
+      >
+        <ModalHeader toggle={clickHandlerCancel}>{heading}</ModalHeader>
+        {/* <CommonModal
                     changeHandler={changeHandler}
                     errorMessage={errorMessage}
                     // blurHandler={blurHandler}
@@ -42,21 +32,21 @@ const ModalMain = ({
                     selectOptions={selectOptions}
                     mainType={mainType}
                     preview={preview}
-                />
+                /> */}
+        {Component}
 
-                <ModalFooterBasic
-                    disabled={buttonDisabled}
-                    // disabled={false}
-                    clickHandlerCancel={clickHandlerCancel}
-                    clickHandlerSubmit={clickHandlerSubmit}
-                    isLoading={isLoading}
-                    edit={edit}
-                />
-            </Modal>
+        <ModalFooterBasic
+          disabled={buttonDisabled}
+          // disabled={false}
+          buttonColour={buttonColour}
+          clickHandlerCancel={clickHandlerCancel}
+          clickHandlerSubmit={clickHandlerSubmit}
+          isLoading={isLoading}
+          buttonText={buttonText}
+        />
+      </Modal>
+    </div>
+  );
+};
 
-        </div>
-    )
-
-}
-
-export default ModalMain
+export default ModalMain;

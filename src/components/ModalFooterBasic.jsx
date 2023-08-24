@@ -8,6 +8,8 @@ const ModalFooterBasic = ({
   clickHandlerCancel,
   isLoading,
   edit,
+  buttonText = "Submit",
+  buttonColour = "primary",
 }) => {
   return (
     <ModalFooter>
@@ -16,16 +18,16 @@ const ModalFooterBasic = ({
       </ButtonBasic>{" "}
       {isLoading ? (
         <div className="ms-1">
-        <ProgressBasic />
+          <ProgressBasic color={buttonColour}/>
         </div>
       ) : (
         <ButtonBasic
           // type='submit'
-          color="primary"
+          color={buttonColour}
           disabled={disabled}
           clickHandler={clickHandlerSubmit}
         >
-          {edit ? "Update" : "Submit"}
+          {buttonText}
         </ButtonBasic>
       )}
     </ModalFooter>

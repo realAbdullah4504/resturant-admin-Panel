@@ -5,6 +5,7 @@
 import Avatar from "@components/avatar";
 
 const url = import.meta.env.VITE_REACT_APP_BASE_URL;
+import TooltipBasic from "../../../../components/TooltipBasic";
 
 const renderClient = (row) => {
   if (row.image.length) {
@@ -26,7 +27,7 @@ export const columns = [
     name: "Title",
     sortable: true,
     minWidth: "150px",
-    sortField: "name",
+    sortField: "title",
     selector: (row) => row.title,
     cell: (row) => {
       // console.log(row);
@@ -40,7 +41,7 @@ export const columns = [
     sortable: true,
     minWidth: "172px",
     height: "200px",
-    sortField: "category",
+    sortField: "categoryId.value",
     selector: (row) => row.categoryId.value,
     cell: (row) => (
       <span className="text-capitalize">{row.categoryId.value}</span>
@@ -54,10 +55,7 @@ export const columns = [
     sortField: "description",
     selector: (row) => row.description,
     cell: (row) => (
-      <span className="text-capitalize">{`${row.description.slice(
-        0,
-        45
-      )}...`}</span>
+    <TooltipBasic id={row._id} className="text-capitalize" children={row.description}></TooltipBasic>
     ),
   },
   {
@@ -72,17 +70,17 @@ export const columns = [
     name: "size",
     sortable: true,
     minWidth: "172px",
-    sortField: "price",
-    selector: (row) => row.size,
-    cell: (row) => <span className="text-capitalize">{row.size}</span>,
+    sortField: "size.value",
+    selector: (row) => row.size.value,
+    cell: (row) => <span className="text-capitalize">{row.size.value}</span>,
   },
   {
     name: "type",
     sortable: true,
     minWidth: "172px",
-    sortField: "price",
-    selector: (row) => row.type,
-    cell: (row) => <span className="text-capitalize">{row.type}</span>,
+    sortField: "typevalue",
+    selector: (row) => row.type.value,
+    cell: (row) => <span className="text-capitalize">{row.type.value}</span>,
   },
 
   // {

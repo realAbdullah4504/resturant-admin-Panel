@@ -1,3 +1,4 @@
+import { off } from "process";
 import { Toaster, toast } from "react-hot-toast";
 
 export const handleToast = (type, message) => {
@@ -6,63 +7,58 @@ export const handleToast = (type, message) => {
 
 export const validation = (value, formSetting) => {
   // console.log("formSetting", formSetting);
-  // console.log("value", value);
+  // console.log("value", value);.
   let isValid = true;
   const errorMessage = {};
 
-  formSetting.forEach((obj) => {
+  for (const key in value) {
+    const obj = formSetting?.find((data) => data.name === key);
+    // console.log("value", value);
+    // console.log("value", value);
     // const test = !obj?.regex?.test(value);
-    // console.log(obj?.errorMessage)
-    // if (obj.required) {
-      
-      if (value === "" || value === undefined) {
-        errorMessage[obj.id] = obj?.errorMessage;
+    if (obj?.required) {
+      if (value[key] === "" || value[key] === undefined) {
+        // console.log(obj?.errorMessage)
+        errorMessage[key] = obj?.errorMessage;
         isValid = false;
-      } else {
-        errorMessage[obj.id] = "";
       }
-    // } else {
-    //   errorMessage[obj.id] = "";
-    // }
-  });
+    } else {
+      errorMessage[key] = "";
+    }
+  }
 
   // const isValid = !Object.values(errorMessage).some(
   //   (errorMsg) => errorMsg !== ""
   // );
-  console.log(errorMessage)
-
+  //  console.log("error", errorMessage);
+  // console.log(isValid)
   return { isValid, error: errorMessage };
 };
 
 export const filteration = (deals, searchTerm) => {
-  return deals.filter((deal) => {
-    const dealValues = Object.values(deal).join(" ").toLowerCase();
-    return dealValues.includes(searchTerm.toLowerCase());
-  });
+  const searchInObject = (obj) => {
+    for (const key in obj) {
+      
+      if (obj.hasOwnProperty(key) && key !=='image') {
+        const value = obj[key];
+        if (typeof value === "object") {
+          const result = searchInObject(value);
+          if (result) return true;
+        } else if (
+          typeof value === "string" &&
+          value.toLowerCase().includes(searchTerm.toLowerCase())
+        ) {
+          return true;
+        } else if (
+          typeof value === "number" &&
+          value.toString().includes(searchTerm)
+        ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  return deals.filter((deal) => searchInObject(deal));
 };
-
-// const obj = FormData?.form?.find((data) => data.name === name);
-//     //console.log(obj);
-
-//     const test = !obj?.regex?.test(value);
-//     // console.log(test);
-//     if (obj?.required) {
-//       if (value === "" || value === undefined || test) {
-//         const updatedErrors = {
-//           ...errorMessage,
-//           [obj?.id]: obj?.errorMessage,
-//         };
-//         // console.log(updatedErrors);
-//         setErrorMessage(updatedErrors);
-//       } else {
-//         setErrorMessage({
-//           ...errorMessage,
-//           [obj?.id]: "",
-//         });
-//       }
-//     } else {
-//       setErrorMessage({
-//         ...errorMessage,
-//         [obj?.id]: "",
-//       });
-//     }

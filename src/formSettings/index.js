@@ -130,13 +130,20 @@ export const FormDataSetting = {
     {
       mainType: "deals",
       id: "5",
-      type: "text",
+      type: "Select",
       required: true,
       isUpdate: true,
       name: "size",
       label: "Size",
       popupText: "",
       helpNote: "",
+
+      options: [
+        { value: "large", label: "Large" },
+        { value: "medium", label: "Medium" },
+        { value: "small", label: "Small" },
+      ],
+
       placeHolder: "Select Size",
       errorMessage: "Enter Valid Size",
       regex: /^[a-zA-z]+([\\s][a-zA-Z]+)*$/,
@@ -145,13 +152,19 @@ export const FormDataSetting = {
     {
       mainType: "deals",
       id: "6",
-      type: "text",
+      type: "Select",
       required: true,
       isUpdate: true,
       name: "type",
       label: "Type",
       popupText: "",
       helpNote: "",
+
+      options: [
+        { value: "deals", label: "Deals" },
+        { value: "menu", label: "Menu" },
+      ],
+
       placeHolder: "Select Type",
       errorMessage: "Enter Valid Type",
       regex: /^[a-zA-z]+([\\s][a-zA-Z]+)*$/,
@@ -178,12 +191,12 @@ export const FormDataSetting = {
       required: true,
       isUpdate: true,
       name: "value",
-      label: "Value",
+      label: "Name",
       popupText: "",
       helpNote: "",
       placeHolder: "Enter Value",
-      // errorMessage: "Enter valid Last Name",
-      // regex: /^[a-zA-z]+([\\s][a-zA-Z]+)*$/,
+      errorMessage: "Enter valid Value",
+      regex: /^[a-zA-z]+([\\s][a-zA-Z]+)*$/,
       value: "",
     },
     {
@@ -197,8 +210,8 @@ export const FormDataSetting = {
       popupText: "",
       helpNote: "",
       placeHolder: "Enter Label",
-      // errorMessage: "Enter valid Last Name",
-      // regex: /^[a-zA-z]+([\\s][a-zA-Z]+)*$/,
+      errorMessage: "Enter valid Label",
+      regex: /^[a-zA-z]+([\\s][a-zA-Z]+)*$/,
       value: "",
     },
     // {
