@@ -38,8 +38,7 @@ export const validation = (value, formSetting) => {
 export const filteration = (deals, searchTerm) => {
   const searchInObject = (obj) => {
     for (const key in obj) {
-      
-      if (obj.hasOwnProperty(key) && key !=='image') {
+      if (obj.hasOwnProperty(key) && key !== "image") {
         const value = obj[key];
         if (typeof value === "object") {
           const result = searchInObject(value);

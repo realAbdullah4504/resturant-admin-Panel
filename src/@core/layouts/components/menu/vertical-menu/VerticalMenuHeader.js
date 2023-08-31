@@ -7,6 +7,7 @@ import { Disc, X, Circle } from "react-feather";
 
 // ** Config
 import themeConfig from "@configs/themeConfig";
+import image from '../../../../../assets/images/logo/Capsicum Pizza Logo-03.png';
 
 // ** Utils
 import { getUserData, getHomeRouteForLoggedInUser } from "@utils";
@@ -60,11 +61,12 @@ const VerticalMenuHeader = (props) => {
             to={user ? getHomeRouteForLoggedInUser(user.role) : "/"}
             className="navbar-brand"
           >
-            {/* <span  className="brand-logo"> */}
-              <img src={themeConfig.app.appLogoImage} height="42" width='220'  alt="logo" />
-            {/* </span> */}
-
+            <span  className="brand-logo">
+              <img src={themeConfig.app.appLogoImage}   alt="logo" />
+            </span>
+            {/* <img className="brand-text mb-0" src={themeConfig.app.appLogoImage}   alt="logo" /> */}
             {/* <h2 className="brand-text mb-0">{themeConfig.app.appName}</h2> */}
+            {/* <h2 className="brand-text mb-0"><img className="brand-text mb-0" src={image} alt="logo" /></h2> */}
           </NavLink>
         </li>
         <li className="nav-item nav-toggle">

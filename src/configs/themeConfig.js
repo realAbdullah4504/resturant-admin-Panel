@@ -1,6 +1,6 @@
 // Logo Import
 import logo from '@src/assets/images/logo/logo.png'
-import logo1 from '@src/assets/images/logo/logo1.png'
+import logo1 from '@src/assets/images/logo/Capsicum Pizza Logo-02.png'
 
 //  import logo from '../../public/logo1.jpg'
 // You can customize the template with the help of this file
@@ -8,7 +8,7 @@ import logo1 from '@src/assets/images/logo/logo1.png'
 //Template config options
 const themeConfig = {
   app: {
-    appName: 'Resturant',
+    appName: 'Capsicum Pizza',
     appLogoImage: logo1
   },
   layout: {
