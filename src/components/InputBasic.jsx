@@ -1,4 +1,11 @@
-import { Input, Label, FormFeedback, Button } from "reactstrap";
+import {
+  Input,
+  Label,
+  FormFeedback,
+  Button,
+  Modal,
+  ModalHeader,
+} from "reactstrap";
 import styles from "./InputBasic.module.css";
 import { FilePlus } from "react-feather";
 const url = import.meta.env.VITE_REACT_APP_BASE_URL;
@@ -19,11 +26,32 @@ const InputBasic = ({
   required = false,
   placeholder = "Enter Name",
   preview = "",
+  edit = true,
 }) => {
   const [file, setFile] = useState("");
+  const [open, setOpen] = useState(false);
+
   console.log("value", value);
   return (
     <div>
+      <Modal
+        isOpen={open}
+        toggle={() => {
+          setOpen(!open);
+        }}
+        className="modal-dialog-centered"
+      >
+        <ModalHeader
+          toggle={() => {
+            setOpen(!open);
+          }}
+        >
+          Image
+        </ModalHeader>
+        <div style={{ cursor: "pointer" }}>
+          <img style={{maxWidth: "100%", maxHeight: "100%"}} src={edit ? `${url}/deals/${preview}` : preview} />
+        </div>
+      </Modal>
       <div>
         {type !== "file" ? (
           <div>
@@ -79,12 +107,15 @@ const InputBasic = ({
             {type === "file" && preview && (
               <div className={styles.filePreview}>
                 <img
-                  src={preview}
+                  onClick={() => {
+                    setOpen(true);
+                  }}
+                  src={edit ? `${url}/deals/${preview}` : preview}
                   alt="Preview"
                   className={styles.previewImage}
                 />
                 <div className={styles.fileInfo}>
-                  <p className={styles.fileName}>{file}</p>
+                  <p className={styles.fileName}>{edit ? preview : file}</p>
                   {/* <Button color="success">Upload</Button> */}
                 </div>
                 {/* <Trash

@@ -17,6 +17,7 @@
   max-height: 25px;
   margin-right: 10px;
   margin-left: 5px;
+  cursor:pointer;
 }
 
 /* Styling for the file info container */

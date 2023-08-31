@@ -335,7 +335,7 @@ const ServiceList = () => {
                 // console.log(row);
                 setEdit(true);
                 setErrorMessage({});
-                setPreview(`${url}/deals/${row.image}`);
+                setPreview(row.image);
               }}
             >
               <Edit
@@ -363,7 +363,7 @@ const ServiceList = () => {
     },
   ];
   //  console.log(FormData);
-
+  console.log("preview", preview);
   return (
     //  <h1>hi iam service</h1>
 
@@ -390,6 +390,7 @@ const ServiceList = () => {
               mainType="deals"
               // preview={edit ? `${url}/deals/${preview}` : preview}
               preview={preview}
+              edit={edit}
             />
           }
           // buttonDisabled={!validation(detail, FormDataSetting?.form)}

@@ -18,6 +18,7 @@ const ModalForm = ({
   selectOptions = [],
   mainType = "",
   preview = "",
+  edit=false
 }) => {
   // const [formModal, setFormModal] = useState(false);
   // const form = formSetting.reduce((types, name) => {
@@ -55,6 +56,7 @@ const ModalForm = ({
                     placeholder={form?.placeHolder}
                     preview={preview}
                     errorMessage={errorMessage[form?.name]}
+                    edit={edit}
                   />
                 ) : (
                   <SelectBasic
